@@ -1,0 +1,57 @@
+<form (submit)="onSubmit()" fxLayout="column" [formGroup]="form">
+  <!-- input text -->
+  <% for (cont property of properties) { %>
+  <div fxLayout="row" fxLayoutAlign="center">
+    <div class="app-field-container" fxFlex="90">
+      <span class="p-float-label">
+        <% if (property.type === "string") { %>
+        <input
+          formControlName="<%= property.name %>"
+          type="text"
+          pInputText
+          style="width: 100%"
+        />
+        <% } else if (property.type === "number") { %>
+        <input
+          formControlName="<%= property.name %>"
+          type="number"
+          pInputText
+          style="width: 100%"
+        />
+        <% } else if (property.type === "boolean") { %>
+        <p-checkbox
+          binary="true"
+          formControlName="<%= property.name %>"
+          label="{{
+            '<%= `${dasherize(name)}.${property.name}` %>' | translate
+          }}"
+        ></p-checkbox>
+        <% } %> <% if (property.type !== "boolean") { %>
+        <label
+          ><span class="bia-star-mandatory">*</span
+          >{{
+            '<%= `${dasherize(name)}.${property.name}` %>' | translate
+          }}</label
+        >
+        <% } %>
+      </span>
+    </div>
+  </div>
+  <% } %>
+
+  <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="end end">
+    <button
+      pButton
+      label="{{ 'bia.save' | translate }}"
+      type="submit"
+      [disabled]="!form.valid"
+    ></button>
+    <button
+      pButton
+      label="{{ 'bia.cancel' | translate }}"
+      type="button"
+      class="p-button-outlined"
+      (click)="onCancel()"
+    ></button>
+  </div>
+</form>

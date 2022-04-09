@@ -1,0 +1,49 @@
+import * as SwaggerParser from '@apidevtools/swagger-parser'
+import {OpenAPI, OpenAPIV3_1} from 'openapi-types'
+
+async function getProperties(entityName: string) {
+  let document: OpenAPI.Document = await SwaggerParser.dereference(
+    '../test/swagger.json',
+  )
+
+  // TODO: add the validation of the version
+
+  const getPath = getPathForEntity(document, entityName)
+  if (!getPath) throw 'No Get path found for the entity ' + entityName
+  getSuccessResponse(getPath)
+}
+
+function getPathForEntity(
+  document: OpenAPI.Document,
+  entityName: string,
+): OpenAPIV3_1.OperationObject | void {
+  if (!document.paths) throw 'No get path is present in swagger file.'
+
+  const test = Object.entries(document.paths).filter(
+    ([key, value]: [string, OpenAPIV3_1.PathItemObject]) =>
+      key.endsWith(entityName) && value.get,
+  )
+
+  console.log(test)
+
+  const getPath = test.map(
+    ([_, value]: [string, OpenAPIV3_1.PathItemObject]) => value.get,
+  )[0]
+
+  return getPath
+}
+
+function getSuccessResponse(
+  path: OpenAPIV3_1.OperationObject,
+  mediaType: 'application/json' = 'application/json',
+): OpenAPIV3_1.SchemaObject | void {
+  if (!path.responses?.['200']) throw 'No 200 status found.'
+
+  const successResponse = path.responses['200'] as OpenAPIV3_1.ResponseObject
+  if (!successResponse.content?.[mediaType])
+    throw `The mediatype ${mediaType} is not known`
+
+  console.log(successResponse.content[mediaType].schema)
+}
+
+export {getProperties}

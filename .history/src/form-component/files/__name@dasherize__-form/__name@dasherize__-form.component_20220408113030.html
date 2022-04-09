@@ -1,0 +1,19 @@
+<form (submit)="onSubmit()" fxLayout="column" [formGroup]="form">
+  <% for (const property of properties) { %> <%= property.name %> <% } %>
+
+  <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="end end">
+    <button
+      pButton
+      label="{{ 'bia.save' | translate }}"
+      type="submit"
+      [disabled]="!form.valid"
+    ></button>
+    <button
+      pButton
+      label="{{ 'bia.cancel' | translate }}"
+      type="button"
+      class="p-button-outlined"
+      (click)="onCancel()"
+    ></button>
+  </div>
+</form>

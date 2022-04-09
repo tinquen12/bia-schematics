@@ -1,0 +1,125 @@
+<form (submit)="onSubmit()" fxLayout="column" [formGroup]="form">
+  <div fxLayout="row" fxLayoutAlign="center">
+    <div class="app-field-container" fxFlex="90">
+      <span class="p-float-label">
+        <input
+          formControlName="id"
+          type="number"
+          pInputText
+          style="width: 100%"
+        />
+
+        <label
+          ><span class="bia-star-mandatory">*</span
+          >{{ 'pet.id' | translate }}</label
+        >
+      </span>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="center">
+    <div class="app-field-container" fxFlex="90">
+      <span class="p-float-label">
+        <input
+          formControlName="name"
+          type="text"
+          pInputText
+          style="width: 100%"
+        />
+
+        <label
+          ><span class="bia-star-mandatory">*</span
+          >{{ 'pet.name' | translate }}</label
+        >
+      </span>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="center">
+    <div class="app-field-container" fxFlex="90">
+      <span class="p-float-label">
+        <input
+          formControlName="tag"
+          type="text"
+          pInputText
+          style="width: 100%"
+        />
+
+        <label
+          ><span class="bia-star-mandatory">*</span
+          >{{ 'pet.tag' | translate }}</label
+        >
+      </span>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="center">
+    <div class="app-field-container" fxFlex="90">
+      <span class="p-float-label">
+        <input
+          formControlName="test.id"
+          type="number"
+          pInputText
+          style="width: 100%"
+        />
+
+        <label
+          ><span class="bia-star-mandatory">*</span
+          >{{ 'pet.test.id' | translate }}</label
+        >
+      </span>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="center">
+    <div class="app-field-container" fxFlex="90">
+      <span class="p-float-label">
+        <input
+          formControlName="test.name"
+          type="text"
+          pInputText
+          style="width: 100%"
+        />
+
+        <label
+          ><span class="bia-star-mandatory">*</span
+          >{{ 'pet.test.name' | translate }}</label
+        >
+      </span>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutAlign="center">
+    <div class="app-field-container" fxFlex="90">
+      <span class="p-float-label">
+        <input
+          formControlName="test.tag"
+          type="text"
+          pInputText
+          style="width: 100%"
+        />
+
+        <label
+          ><span class="bia-star-mandatory">*</span
+          >{{ 'pet.test.tag' | translate }}</label
+        >
+      </span>
+    </div>
+  </div>
+
+  <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="end end">
+    <button
+      pButton
+      label="{{ 'bia.save' | translate }}"
+      type="submit"
+      [disabled]="!form.valid"
+    ></button>
+    <button
+      pButton
+      label="{{ 'bia.cancel' | translate }}"
+      type="button"
+      class="p-button-outlined"
+      (click)="onCancel()"
+    ></button>
+  </div>
+</form>

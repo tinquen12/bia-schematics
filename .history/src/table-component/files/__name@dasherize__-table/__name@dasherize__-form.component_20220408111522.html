@@ -1,0 +1,176 @@
+<form (submit)="onSubmit()" fxLayout="column" [formGroup]="form">
+  <!-- input text -->
+  <% for (cont property of properties) { %>
+  <div fxLayout="row" fxLayoutAlign="center">
+    <div class="app-field-container" fxFlex="90">
+      <span class="p-float-label">
+        <% if (property.type === "string") { %>
+        <input
+          formControlName="<%= property.name %>"
+          type="text"
+          pInputText
+          style="width: 100%"
+        />
+        <% } else if (property.type === "number") { %>
+        <input
+          formControlName="<%= property.name %>"
+          type="number"
+          pInputText
+          style="width: 100%"
+        />
+        <% } else if (property.type === "boolean") { %>
+        <p-checkbox
+          binary="true"
+          formControlName="<%= property.name %>"
+          label="{{
+            '<%= `${dasherize(name)}.${property.name}` %>' | translate
+          }}"
+        ></p-checkbox>
+        <% } %> <% if (property.type !== "boolean") { %>
+        <label
+          ><span class="bia-star-mandatory">*</span
+          >{{
+            '<%= `${dasherize(name)}.${property.name}` %>' | translate
+          }}</label
+        >
+        <% } %>
+      </span>
+    </div>
+  </div>
+  <% } %>
+
+  <!-- input checkbox -->
+  <div fxLayout="row" fxLayoutAlign="center">
+    <div class="app-field-container" fxFlex="90">
+      <p-checkbox
+        binary="true"
+        formControlName="isActive"
+        label="{{ 'plane.isActive' | translate }}"
+      ></p-checkbox>
+    </div>
+  </div>
+
+  <!-- input date time -->
+  <div fxLayout="row" fxLayoutAlign="center">
+    <div class="app-field-container" fxFlex="90">
+      <span class="p-float-label">
+        <p-calendar
+          biaLocale
+          formControlName="lastFlightDate"
+          showTime="true"
+          placeholder="DateTime"
+          dateFormat="yy-mm-dd"
+          placeholder="&nbsp;"
+          [inputStyle]="{width: '100%'}"
+          appendTo="body"
+        ></p-calendar>
+        <label>{{ 'plane.lastFlightDate' | translate }}</label>
+      </span>
+    </div>
+  </div>
+
+  <!-- input date -->
+  <div fxLayout="row" fxLayoutAlign="center">
+    <div class="app-field-container" fxFlex="90">
+      <span class="p-float-label">
+        <p-calendar
+          biaLocale
+          formControlName="deliveryDate"
+          placeholder="&nbsp;"
+          [showButtonBar]="true"
+          appendTo="body"
+          dateFormat="yy-mm-dd"
+          [inputStyle]="{width: '100%'}"
+        ></p-calendar>
+        <label>{{ 'plane.deliveryDate' | translate }}</label>
+      </span>
+    </div>
+  </div>
+
+  <!-- input time -->
+  <div fxLayout="row" fxLayoutAlign="center">
+    <div class="app-field-container" fxFlex="90">
+      <span class="p-float-label">
+        <p-calendar
+          formControlName="syncTime"
+          showTime="true"
+          showSeconds="true"
+          [timeOnly]="true"
+          placeholder="&nbsp;"
+          dataType="string"
+          [inputStyle]="{width: '100%'}"
+        ></p-calendar>
+        <label>{{ 'plane.syncTime' | translate }}</label>
+      </span>
+    </div>
+  </div>
+
+  <!-- input number -->
+  <div fxLayout="row" fxLayoutAlign="center">
+    <div class="app-field-container" fxFlex="90">
+      <span class="p-float-label">
+        <input
+          formControlName="capacity"
+          type="number"
+          pInputText
+          style="width: 100%"
+        />
+        <label
+          ><span class="bia-star-mandatory">*</span
+          >{{ 'plane.capacity' | translate }}</label
+        >
+      </span>
+    </div>
+  </div>
+
+  <!-- input dropdown-->
+  <div fxLayout="row" fxLayoutAlign="center">
+    <div class="app-field-container" fxFlex="90">
+      <span class="p-float-label">
+        <p-dropdown
+          [options]="planeTypeOptions"
+          placeholder="&nbsp;"
+          formControlName="planeType"
+          optionLabel="display"
+          datakey="id"
+          [style]="{width: '100%'}"
+          [showClear]="true"
+        ></p-dropdown>
+        <label>{{ 'plane.planeType' | translate }}</label>
+      </span>
+    </div>
+  </div>
+
+  <!-- input multiselect -->
+  <div fxLayout="row" fxLayoutAlign="center">
+    <div class="app-field-container" fxFlex="90">
+      <span class="p-float-label">
+        <p-multiSelect
+          defaultLabel="&nbsp;"
+          [options]="airportOptions"
+          formControlName="connectingAirports"
+          optionLabel="display"
+          datakey="id"
+          [virtualScroll]="true"
+          [style]="{width: '100%'}"
+        ></p-multiSelect>
+        <label>{{ 'plane.connectingAirports' | translate }}</label>
+      </span>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="end end">
+    <button
+      pButton
+      label="{{ 'bia.save' | translate }}"
+      type="submit"
+      [disabled]="!form.valid"
+    ></button>
+    <button
+      pButton
+      label="{{ 'bia.cancel' | translate }}"
+      type="button"
+      class="p-button-outlined"
+      (click)="onCancel()"
+    ></button>
+  </div>
+</form>
