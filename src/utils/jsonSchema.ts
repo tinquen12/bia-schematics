@@ -14,10 +14,8 @@ interface Property {
     | undefined
 }
 
-async function getProperties(entityName: string): Promise<Property[]> {
-  let document: OpenAPI.Document = await SwaggerParser.dereference(
-    '../test/swagger.json',
-  )
+async function getProperties(pathToSwagger: string, entityName: string): Promise<Property[]> {
+  let document: OpenAPI.Document = await SwaggerParser.dereference(pathToSwagger)
 
   // TODO: add the validation of the version
 
@@ -29,6 +27,19 @@ async function getProperties(entityName: string): Promise<Property[]> {
   return getResponseProperties(response)
 }
 
+async function getSchema(pathToSwagger : string, entityName: string): Promise<OpenAPIV3_1.SchemaObject> {
+  let document: OpenAPI.Document = await SwaggerParser.dereference(pathToSwagger)
+
+  // TODO: add the validation of the version
+
+  const getPath = getPathForEntity(document, entityName)
+  if (!getPath) throw 'No Get path found for the entity ' + entityName
+  const response = getSuccessResponse(getPath) as OpenAPIV3_1.ArraySchemaObject
+  if (!response) throw 'No response found'
+
+  return response.items as OpenAPIV3_1.SchemaObject
+}
+
 function getPathForEntity(
   document: OpenAPI.Document,
   entityName: string,
@@ -38,9 +49,11 @@ function getPathForEntity(
   const getPath = Object.entries(document.paths)
     .filter(
       ([key, value]: [string, OpenAPIV3_1.PathItemObject]) =>
-        key.endsWith(entityName) && value.get,
+        key.toLowerCase().includes(entityName.toLocaleLowerCase()) 
+        && value.post
+        && key.endsWith("all"),
     )
-    .map(([_, value]: [string, OpenAPIV3_1.PathItemObject]) => value.get)[0]
+    .map(([_, value]: [string, OpenAPIV3_1.PathItemObject]) => value.post)[0]
 
   return getPath
 }
@@ -86,4 +99,4 @@ function flattenSchema(
   return props
 }
 
-export {getProperties}
+export {getProperties, getSchema}

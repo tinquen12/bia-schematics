@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "$id": "SchematicsStore",
-  "title": "Store",
+  "$id": "SchematicsFeatureConstants",
+  "title": "Feature constants",
   "type": "object",
   "properties": {
     "path": {
@@ -23,19 +23,15 @@
         "$source": "argv",
         "index": 0
       },
-      "x-prompt": "What is the singular name of the entity you want to create the store ?"
+      "x-prompt": "What is the singular name of the entity you want to create the table ?"
     },
     "pluralName": {
       "type": "string",
       "$default": {
         "$source": "argv",
-        "index": 1
+        "index": 0
       },
-      "x-prompt": "What is the plural name of the entity you want to create the store ?"
-    },
-    "modelPath": {
-      "type": "string",
-      "default": ""
+      "x-prompt": "What is the plural name of the entity you want to create the table ?"
     },
     "swaggerPath": {
       "type": "string",
@@ -45,7 +41,43 @@
         "index": 2
       },
       "x-prompt": "Where is the swagger json to use ?"
-     }
+     },
+    "modelPath": {
+      "type": "string",
+      "default": ""
+    },
+    "storePath": {
+      "type": "string",
+      "default": ""
+    },
+    "viewsPath": {
+      "type": "string",
+      "default": ""
+    },
+    "componentsPath": {
+      "type": "string",
+      "default": ""
+    },
+    "constantsPath": {
+      "type": "string",
+      "default": ""
+    },
+    "useCalcMode": {
+      "type": "boolean",
+      "default": false
+    },
+    "useSignalR": {
+      "type": "boolean",
+      "default": false
+    },
+    "useView": {
+      "type": "boolean",
+      "default": false
+    },
+    "usePopUp": {
+      "type": "boolean",
+      "default": true
+    }
   },
-  "required": ["name", "pluralName", "swaggerPath"]
+  "required": ["name", "pluralName"]
 }

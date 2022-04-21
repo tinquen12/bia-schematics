@@ -11,27 +11,26 @@ import {
 } from '@angular-devkit/schematics'
 import {strings} from '@angular-devkit/core'
 import {Schema} from './schema'
-import {getProperties} from '../utils/jsonSchema'
-import {parseName} from '../utils/parse-name'
-import {setupOptions, SetupOptions} from '../utils/setup-options'
-import {generateModel} from '../utils/model-generation'
-
+import {parseName} from '../../utils/parse-name'
+import {getProperties} from '../../utils/jsonSchema'
+import {setupOptions, SetupOptions} from '../../utils/setup-options'
+import {generateModel} from '../../utils/model-generation'
+import {generateStore} from '../../utils/store-generation'
 
 export default function (options: Schema): Rule {
   return async (host: Tree, context: SchematicContext) => {
-    context.logger.info('Store options: ' + JSON.stringify(options))
+    context.logger.info('Service options: ' + JSON.stringify(options))
 
     await setupOptions(options as SetupOptions, host);
+
     const parsedName = parseName(options.path as string, options.name)
 
     const id = (await getProperties(options.swaggerPath, options.pluralName)).filter(
       ({name}) => name === 'id',
     )[0]
 
-    if (!id)
-      throw "No id field found and one is required."
-
-    const {rule, path: modelPath} = generateModel(options, parsedName)
+    const {rule: createModelRule, path: modelPath} = generateModel(options, parsedName)
+    const {rule: createActionRule, actionsPath: actionPath, statePath} = generateStore(options, parsedName)
 
     let standardRule = mergeWith(
       apply(url('./files'), [
@@ -39,14 +38,19 @@ export default function (options: Schema): Rule {
           ...strings,
           ...options,
           modelRelativePath: modelPath,
-          isNested: false,
+          actionRelativePath: actionPath,
+          stateRelativePath: statePath,
           idType: id.type,
         }),
         move(parsedName.path),
       ]))
 
-    if (rule)
-      return chain([rule, standardRule])
+    
+    if (createModelRule)
+      standardRule = chain([createModelRule, standardRule])
+
+    if (createActionRule)
+      standardRule = chain([createActionRule, standardRule])
 
     return standardRule
   }

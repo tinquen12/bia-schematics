@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/schema",
-  "$id": "SchematicsStore",
-  "title": "Store",
+  "$id": "SchematicsViewIndex",
+  "title": "View Index",
   "type": "object",
   "properties": {
     "path": {
@@ -23,17 +23,21 @@
         "$source": "argv",
         "index": 0
       },
-      "x-prompt": "What is the singular name of the entity you want to create the store ?"
+      "x-prompt": "What is the singular name of the entity you want to create the index view ?"
     },
     "pluralName": {
       "type": "string",
       "$default": {
         "$source": "argv",
-        "index": 1
+        "index": 0
       },
-      "x-prompt": "What is the plural name of the entity you want to create the store ?"
+      "x-prompt": "What is the plural name of the entity you want to create the index view ?"
     },
     "modelPath": {
+      "type": "string",
+      "default": ""
+    },
+    "storePath": {
       "type": "string",
       "default": ""
     },
@@ -45,7 +49,12 @@
         "index": 2
       },
       "x-prompt": "Where is the swagger json to use ?"
-     }
+    },
+    "useCalcMode": {
+      "type": "boolean",
+      "description": "True if the calcMode is activated.",
+      "default": "false"
+    }
   },
-  "required": ["name", "pluralName", "swaggerPath"]
+  "required": ["name", "pluralName"]
 }

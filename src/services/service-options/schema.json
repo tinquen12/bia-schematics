@@ -36,16 +36,7 @@
     "modelPath": {
       "type": "string",
       "default": ""
-    },
-    "swaggerPath": {
-      "type": "string",
-      "description": "The path to swagger json file.",
-      "$default": {
-        "$source": "argv",
-        "index": 2
-      },
-      "x-prompt": "Where is the swagger json to use ?"
-     }
+    }
   },
-  "required": ["name", "pluralName", "swaggerPath"]
+  "required": ["name", "pluralName"]
 }

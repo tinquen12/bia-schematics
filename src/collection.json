@@ -1,28 +1,75 @@
 {
   "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
   "schematics": {
-    "my-schematic": {
-      "description": "An example schematic",
-      "factory": "./my-schematic/index#mySchematic"
-    },
-    "my-other-schematic": {
-      "description": "A schematic that uses another schematics.",
-      "factory": "./my-other-schematic"
-    },
-    "my-full-schematic": {
-      "description": "A schematic using a source and a schema to validate options.",
-      "factory": "./my-full-schematic",
-      "schema": "./my-full-schematic/schema.json"
-    },
     "table-component": {
-      "factory": "./table-component",
+      "factory": "./components/table-component",
       "description": "Create a new table component.",
-      "schema": "./table-component/schema.json"
+      "schema": "./components/table-component/schema.json"
     },
     "form-component": {
-      "factory": "./form-component",
+      "factory": "./components/form-component",
       "description": "Create a new form component.",
-      "schema": "./form-component/schema.json"
+      "schema": "./components/form-component/schema.json"
+    },
+    "service-das": {
+      "factory": "./services/service-das",
+      "description": "Create a new DAS service.",
+      "schema": "./services/service-das/schema.json"
+    },
+    "service-options": {
+      "factory": "./services/service-options",
+      "description": "Create a new option service.",
+      "schema": "./services/service-options/schema.json"
+    },
+    "service-service": {
+      "factory": "./services/service-service",
+      "description": "Create a new service.",
+      "schema": "./services/service-service/schema.json"
+    },
+    "service-signalr": {
+      "factory": "./services/service-signalr",
+      "description": "Create a new signalr service.",
+      "schema": "./services/service-signalr/schema.json"
+    },
+    "store": {
+      "factory": "./store",
+      "description": "Create a new store.",
+      "schema": "./store/schema.json"
+    },
+    "model": {
+      "factory": "./model",
+      "description": "Create a new model.",
+      "schema": "./model/schema.json"
+    },
+    "views-index": {
+      "factory": "./views/views-index",
+      "description": "Create a new index view.",
+      "schema": "./views/views-index/schema.json"
+    },
+    "views-new": {
+      "factory": "./views/views-new",
+      "description": "Create a new form view.",
+      "schema": "./views/views-new/schema.json"
+    },
+    "views-item": {
+      "factory": "./views/views-item",
+      "description": "Create a new item view.",
+      "schema": "./views/views-item/schema.json"
+    },
+    "views-edit": {
+      "factory": "./views/views-edit",
+      "description": "Create an edit view.",
+      "schema": "./views/views-edit/schema.json"
+    },
+    "feature-constants": {
+      "factory": "./feature/constants",
+      "description": "Create the constants for the feature.",
+      "schema": "./feature/constants/schema.json"
+    },
+    "feature": {
+      "factory": "./feature/module",
+      "description": "Create the feature.",
+      "schema": "./feature/module/schema.json"
     }
   }
 }
