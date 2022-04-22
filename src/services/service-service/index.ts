@@ -18,19 +18,20 @@ import {generateModel} from '../../utils/model-generation'
 import {generateStore} from '../../utils/store-generation'
 
 export default function (options: Schema): Rule {
-  return async (host: Tree, context: SchematicContext) => {
-    context.logger.info('Service options: ' + JSON.stringify(options))
+  return async (host: Tree, _: SchematicContext) => {
+    // context.logger.debug('Service options: ' + JSON.stringify(options))
 
     await setupOptions(options as SetupOptions, host);
 
     const parsedName = parseName(options.path as string, options.name)
+    const targetPath = `${parsedName.path}/services`
 
     const id = (await getProperties(options.swaggerPath, options.pluralName)).filter(
       ({name}) => name === 'id',
     )[0]
 
-    const {rule: createModelRule, path: modelPath} = generateModel(options, parsedName)
-    const {rule: createActionRule, actionsPath: actionPath, statePath} = generateStore(options, parsedName)
+    const {rule: createModelRule, path: modelPath} = generateModel(options, targetPath)
+    const {rule: createActionRule, actionsPath: actionPath, statePath} = generateStore(options, targetPath)
 
     let standardRule = mergeWith(
       apply(url('./files'), [
@@ -42,7 +43,7 @@ export default function (options: Schema): Rule {
           stateRelativePath: statePath,
           idType: id.type,
         }),
-        move(parsedName.path),
+        move(targetPath),
       ]))
 
     

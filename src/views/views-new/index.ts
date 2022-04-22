@@ -18,15 +18,17 @@ import {generateStore} from '../../utils/store-generation'
 import {generateServices} from '../../utils/services-generation'
 
 export default function (options: Schema): Rule {
-  return async (host: Tree, context: SchematicContext) => {
-    context.logger.info('View new options: ' + JSON.stringify(options))
+  return async (host: Tree, _: SchematicContext) => {
+    // context.logger.debug('View new options: ' + JSON.stringify(options))
 
     await setupOptions(options as SetupOptions, host);
     
     const parsedName = parseName(options.path as string, options.name)
-    const {rule: createModelRule, path: modelPath} = generateModel(options, parsedName)
-    const {rule: createActionRule, actionsPath: actionPath, statePath} = generateStore(options, parsedName)
-    const {rules: createServiceRules, signalrServicePath, dasServicePath, optionsServicePath } = generateServices(options, parsedName)
+    const targetPath = `${parsedName.path}/views/${strings.dasherize(options.name)}-new`
+
+    const {rule: createModelRule, path: modelPath} = generateModel(options, targetPath)
+    const {rule: createActionRule, actionsPath: actionPath, statePath} = generateStore(options, targetPath)
+    const {rules: createServiceRules, signalrServicePath, dasServicePath, optionsServicePath } = generateServices(options, targetPath)
 
     let standardRule = mergeWith(
       apply(url('./files'), [
@@ -40,7 +42,7 @@ export default function (options: Schema): Rule {
           dasServiceRelativePath: dasServicePath,
           optionsServiceRelativePath: optionsServicePath
         }),
-        move(parsedName.path),
+        move(targetPath),
       ]))
 
     

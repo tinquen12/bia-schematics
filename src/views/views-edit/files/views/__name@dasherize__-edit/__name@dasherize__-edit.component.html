@@ -1,6 +1,0 @@
-<app-<%= dasherize(name)%>-form 
-    [<%= dasherize(name)%>]="<%= dasherize(name)%>Service.<%= dasherize(name)%>$ | async" 
-    (cancel)="onCancelled()" 
-    (save)="onSubmitted($event)"
-></app-<%= dasherize(name)%>-form>
-<bia-spinner *ngIf="<%= dasherize(name)%>Service.loading$ | async" [overlay]="true"></bia-spinner>

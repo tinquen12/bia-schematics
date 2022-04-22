@@ -17,8 +17,8 @@ import {setupOptions, SetupOptions} from '../utils/setup-options'
 
 
 export default function (options: Schema): Rule {
-  return async (host: Tree, context: SchematicContext) => {
-    context.logger.info('Model options: ' + JSON.stringify(options))
+  return async (host: Tree, _: SchematicContext) => {
+    // context.logger.debug('Model options: ' + JSON.stringify(options))
 
     await setupOptions(options as SetupOptions, host);
     

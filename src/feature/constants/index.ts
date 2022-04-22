@@ -14,8 +14,8 @@ import {parseName} from '../../utils/parse-name'
 import {setupOptions, SetupOptions} from '../../utils/setup-options'
 
 export default function (options: Schema): Rule {
-  return async (host: Tree, context: SchematicContext) => {
-    context.logger.info('Feature constants options: ' + JSON.stringify(options))
+  return async (host: Tree, _: SchematicContext) => {
+    // context.logger.debug('Feature constants options: ' + JSON.stringify(options))
 
     await setupOptions(options as SetupOptions, host);
 

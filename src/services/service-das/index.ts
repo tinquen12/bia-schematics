@@ -17,13 +17,15 @@ import {setupOptions, SetupOptions} from '../../utils/setup-options'
 import {generateModel} from '../../utils/model-generation'
 
 export default function (options: Schema): Rule {
-  return async (host: Tree, context: SchematicContext) => {
-    context.logger.info('Service DAS options: ' + JSON.stringify(options))
+  return async (host: Tree, _: SchematicContext) => {
+    //context.logger.debug('Service DAS options: ' + JSON.stringify(options))
 
     await setupOptions(options as SetupOptions, host);
     
     const parsedPath = parseName(options.path as string, options.name)
-    const {rule, path: modelPath} = generateModel(options, parsedPath)
+    const targetPath = `${parsedPath.path}/services`
+
+    const {rule, path: modelPath} = generateModel(options, targetPath)
     const id = (await getProperties(options.swaggerPath, options.pluralName)).filter(
       ({name}) => name === 'id',
     )[0]
@@ -36,7 +38,7 @@ export default function (options: Schema): Rule {
           isNested: false,
           idType: id.type,
         }),
-        move(parsedPath.path),
+        move(targetPath),
       ]),
     )
 

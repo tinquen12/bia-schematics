@@ -14,11 +14,12 @@ import {parseName} from '../../utils/parse-name'
 import {setupOptions, SetupOptions} from '../../utils/setup-options'
 
 export default function (options: Schema): Rule {
-  return async (host: Tree, context: SchematicContext) => {
-    context.logger.info('SignalR service: ' + JSON.stringify(options))
+  return async (host: Tree, _: SchematicContext) => {
+    // context.logger.debug('SignalR service: ' + JSON.stringify(options))
 
     await setupOptions(options as SetupOptions, host);
     const parsedPath = parseName(options.path as string, options.name)
+    const targetPath = `${parsedPath.path}/services`
     
     return mergeWith(
       apply(url('./files'), [
@@ -26,7 +27,7 @@ export default function (options: Schema): Rule {
           ...strings,
           ...options,
         }),
-        move(parsedPath.path),
+        move(targetPath),
       ]),
     )
   }

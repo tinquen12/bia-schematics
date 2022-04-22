@@ -12,6 +12,7 @@ interface SetupOptions {
   path: string;
   name: string;
   pluralName: string;
+  appPath?: string;
 }
 
 async function setupOptions(options: SetupOptions, host: Tree) {
@@ -31,6 +32,7 @@ async function setupOptions(options: SetupOptions, host: Tree) {
   const parsedPath = parseName(options.path as string, options.name);
   options.name = parsedPath.name;
   options.path = parsedPath.path;
+  options.appPath = buildDefaultPath(project);
 }
 
 export {

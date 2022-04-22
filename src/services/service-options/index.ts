@@ -16,13 +16,14 @@ import {setupOptions, SetupOptions} from '../../utils/setup-options'
 import {generateModel} from '../../utils/model-generation'
 
 export default function (options: Schema): Rule {
-  return async (host: Tree, context: SchematicContext) => {
-    context.logger.info('Service options options: ' + JSON.stringify(options))
+  return async (host: Tree, _: SchematicContext) => {
+    // context.logger.debug('Service options options: ' + JSON.stringify(options))
 
     await setupOptions(options as SetupOptions, host);
     const parsedPath = parseName(options.path as string, options.name)
+    const targetPath = `${parsedPath.path}/services`
 
-    const {rule, path: modelPath} = generateModel(options, parsedPath)
+    const {rule, path: modelPath} = generateModel(options, targetPath)
 
     
     let standardRule =  mergeWith(
@@ -32,7 +33,7 @@ export default function (options: Schema): Rule {
           ...options,
           modelRelativePath: modelPath,
         }),
-        move(parsedPath.path),
+        move(targetPath),
       ]),
     )
 

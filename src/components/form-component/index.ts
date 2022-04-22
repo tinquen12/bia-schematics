@@ -17,13 +17,15 @@ import {setupOptions, SetupOptions} from '../../utils/setup-options'
 import {generateModel} from '../../utils/model-generation'
 
 export default function (options: Schema): Rule {
-  return async (host: Tree, context: SchematicContext) => {
-    context.logger.info('Form component options: ' + JSON.stringify(options))
+  return async (host: Tree, _: SchematicContext) => {
+    // context.logger.debug('Form component options: ' + JSON.stringify(options))
 
     await setupOptions(options as SetupOptions, host);
     
     const parsedName = parseName(options.path as string, options.name)
-    const {rule, path: modelPath} = generateModel(options, parsedName)
+    const targetPath = `${parsedName.path}/components/${strings.dasherize(options.name)}-form`
+
+    const {rule, path: modelPath} = generateModel(options, targetPath)
 
     const properties = await getProperties(options.swaggerPath, options.pluralName)
     let standardRule = mergeWith(
@@ -35,7 +37,7 @@ export default function (options: Schema): Rule {
           modelRelativePath: modelPath,
           isNested: false,
         }),
-        move(parsedName.path),
+        move(targetPath),
       ]))
 
     if (rule)

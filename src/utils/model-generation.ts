@@ -2,9 +2,9 @@ import {
   Rule,
   schematic
 } from '@angular-devkit/schematics'
-import {Location} from '../utils/parse-name'
-import {buildRelativePath} from '../utils/find-module'
-import {isAbsolute, join} from 'path'
+import {join} from 'path'
+import { normalize } from '@angular-devkit/core'
+import { buildRelativePath } from './find-module'
 
 interface ModelPath {
   rule: Rule | undefined;
@@ -18,20 +18,20 @@ interface ModelOptions {
   path?: string
 }
 
-function generateModel(options: ModelOptions, location: Location): ModelPath {
+function generateModel(options: ModelOptions, targetPath: string): ModelPath {
   const {path, ...otherOptions} = options
-
   const modelPath = options.modelPath as string
-  const relativePath = isAbsolute(modelPath) ? buildRelativePath(join(process.cwd(), location.path, location.name), modelPath) : modelPath
-  if (options.modelPath === "")
+  const featurePath = options.path as string
+
+  if (modelPath === "")
     return ({
       rule: schematic('model', otherOptions),
-      path: buildRelativePath(join(process.cwd(), location.path, location.name), join(process.cwd(), options.pluralName, "model", `${options.name}`))
+      path: buildRelativePath(`${targetPath}/whatever.ts`, normalize(join(featurePath, "model", `${options.name}`)))
     })
 
   return ({
     rule: undefined,
-    path: relativePath
+    path: modelPath
   })
 }
 

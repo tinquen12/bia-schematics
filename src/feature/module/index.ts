@@ -7,7 +7,7 @@ import {
   url,
   mergeWith,
   move,
-  chain
+  chain,
 } from '@angular-devkit/schematics'
 import {strings} from '@angular-devkit/core'
 import {Schema} from './schema'
@@ -19,20 +19,22 @@ import {generateServices} from '../../utils/services-generation'
 import {generateConstants} from '../../utils/constants-generation'
 import {parseName} from '../../utils/parse-name'
 import {setupOptions, SetupOptions} from '../../utils/setup-options'
+import { injectRoute } from '../../utils/inject-routing'
+import { injectPermissions } from '../../utils/inject-permissions'
+import { injectNavigation } from '../../utils/inject-navigation'
 
 export default function (options: Schema): Rule {
-  return async (host: Tree, context: SchematicContext) => {
-    context.logger.info('View index options: ' + JSON.stringify(options))
-
+  return async (host: Tree, _: SchematicContext) => {
+    // context.logger.debug('View index options: ' + JSON.stringify(options))
     await setupOptions(options as SetupOptions, host);
 
     const parsedName = parseName(options.path as string, options.name)
-    const {rule: createModelRule, path: modelPath} = generateModel(options, parsedName)
-    const {rule: createActionRule, actionsPath: actionPath, statePath, effectsPath} = generateStore(options, parsedName)
-    const {rules: createViewsRule, indexPath, editPath, itemPath, newPath } = generateViews(options, parsedName)
-    const {rules: createComponentsRule, tablePath, formPath} = generateComponents(options, parsedName)
-    const {rule: createConstantsRule, path: constantsPath} = generateConstants(options, parsedName)
-    const {rules: createServiceRules, signalrServicePath, dasServicePath, optionsServicePath, globalServicePath} = generateServices(options, parsedName)
+    const {rule: createModelRule, path: modelPath} = generateModel(options, parsedName.path)
+    const {rule: createActionRule, actionsPath: actionPath, statePath, effectsPath} = generateStore(options, parsedName.path)
+    const {rules: createViewsRule, indexPath, editPath, itemPath, newPath } = generateViews(options, parsedName.path)
+    const {rules: createComponentsRule, tablePath, formPath} = generateComponents(options, parsedName.path)
+    const {rule: createConstantsRule, path: constantsPath} = generateConstants(options, parsedName.path)
+    const {rules: createServiceRules, signalrServicePath, dasServicePath, optionsServicePath, globalServicePath} = generateServices(options, parsedName.path)
 
     let standardRule = mergeWith(
       apply(url('./files'), [
@@ -76,6 +78,17 @@ export default function (options: Schema): Rule {
 
     if (createConstantsRule)
       standardRule = chain([createConstantsRule, standardRule])
+
+    if (options.injectRouting)
+      standardRule = chain([injectRoute(options), standardRule])
+
+    // Only inject Navigation with permissions because permission must be present
+    if (options.injectPermissions)
+    {
+      standardRule = chain([injectPermissions(options), standardRule])
+      standardRule = chain([injectNavigation(options), standardRule])
+    }
+
 
     return standardRule
   }

@@ -2,9 +2,9 @@ import {
   Rule,
   schematic
 } from '@angular-devkit/schematics'
-import {Location} from '../utils/parse-name'
 import {buildRelativePath} from '../utils/find-module'
-import {isAbsolute, join, parse} from 'path'
+import {join, parse} from 'path'
+import { normalize } from '@angular-devkit/core'
 
 interface ConstantsPath {
   rule: Rule | undefined,
@@ -18,22 +18,23 @@ interface ConstantsOptions {
   constantsPath?: string;
 }
 
-function generateConstants(options: ConstantsOptions, location: Location): ConstantsPath {
+function generateConstants(options: ConstantsOptions, targetPath: string): ConstantsPath {
   const {path, ...otherOptions} = options
   
   const constantsPath = options.constantsPath as string
-  const relativePath = isAbsolute(constantsPath) ? buildRelativePath(join(process.cwd(), location.path, location.name), constantsPath) : constantsPath
-  if (options.constantsPath === "")
+  const featurePath = options.path as string
+
+  if (constantsPath === "")
     return ({
       rule: schematic('feature-constants', otherOptions),
-      path: buildRelativePath(join(process.cwd(), location.path, location.name), join(process.cwd(), options.pluralName, `${options.name}.constants`))
+      path: buildRelativePath(`${targetPath}/whatever.ts`, normalize(join(featurePath, `${options.name}.constants`)))
     })
 
-  const {dir} = parse(relativePath)
+  const {dir} = parse(constantsPath)
 
   return ({
     rule: undefined,
-    path: join(dir, `${options.name}.constants`)
+    path: normalize(join(dir, `${options.name}.constants`))
   })
 }
 

@@ -62,6 +62,10 @@
       "type": "string",
       "default": ""
     },
+    "servicePath": {
+      "type": "string",
+      "default": ""
+    },
     "useCalcMode": {
       "type": "boolean",
       "default": false
@@ -77,6 +81,18 @@
     "usePopUp": {
       "type": "boolean",
       "default": true
+    },
+    "injectRouting": {
+      "type": "boolean",
+      "default": true
+    },
+    "injectPermissions": {
+      "type": "boolean",
+      "default": true
+    },
+    "permissions": {
+      "type": "array",
+      "default": ["Create", "Delete", "List_Access", "Read", "Save", "Update"]
     }
   },
   "required": ["name", "pluralName"]

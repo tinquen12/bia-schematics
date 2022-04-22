@@ -2,9 +2,9 @@ import {
   Rule,
   schematic
 } from '@angular-devkit/schematics'
-import {Location} from '../utils/parse-name'
 import {buildRelativePath} from '../utils/find-module'
-import {isAbsolute, join, parse} from 'path'
+import {join, parse} from 'path'
+import { normalize } from '@angular-devkit/core'
 
 interface ComponentsPath {
   rules: Rule[] | undefined;
@@ -19,24 +19,25 @@ interface ComponentsOptions {
   componentsPath?: string;
 }
 
-function generateComponents(options: ComponentsOptions, location: Location): ComponentsPath {
+function generateComponents(options: ComponentsOptions, targetPath: string): ComponentsPath {
   const {path, ...otherOptions} = options
   
   const componentsPath = options.componentsPath as string
-  const relativePath = isAbsolute(componentsPath) ? buildRelativePath(join(process.cwd(), location.path, location.name), componentsPath) : componentsPath
-  if (options.componentsPath === "")
+  const featurePath = options.path as string
+
+  if (componentsPath === "")
     return ({
       rules: [schematic('form-component', otherOptions), schematic('table-component', otherOptions)],
-      formPath: buildRelativePath(join(process.cwd(), location.path, location.name), join(process.cwd(), options.pluralName, "components", `${options.name}-form`, `${options.name}-form.component`)),
-      tablePath: buildRelativePath(join(process.cwd(), location.path, location.name), join(process.cwd(), options.pluralName, "components", `${options.name}-table`, `${options.name}-table.component`))
+      formPath: buildRelativePath(`${targetPath}/whatever.ts`, normalize(join(featurePath, "components", `${options.name}-form`, `${options.name}-form.component`))),
+      tablePath: buildRelativePath(`${targetPath}/whatever.ts`, normalize(join(featurePath, "components", `${options.name}-table`, `${options.name}-table.component`))),
     })
 
-  const {dir} = parse(relativePath)
+  const {dir} = parse(componentsPath)
 
   return ({
     rules: [],
-    formPath: join(dir, `${options.name}-form`, `${options.name}-form.component`),
-    tablePath: join(dir, `${options.name}-table`, `${options.name}-table.component`)
+    formPath: normalize(join(dir, `${options.name}-form`, `${options.name}-form.component`)),
+    tablePath: normalize(join(dir, `${options.name}-table`, `${options.name}-table.component`))
   })
 }
 

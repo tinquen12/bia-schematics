@@ -1,0 +1,65 @@
+<div fxLayout fxLayout.xs="column" fxLayoutWrap="wrap">
+  <div fxFlex="100">
+    <bia-table-header
+      [headerTitle]="'<%= dasherize(name) %>.listOf' | translate"
+      [canAdd]="canAdd&&!useCalcMode"
+      [canDelete]="canDelete"
+      [canExportCSV]="true"
+      (create)="onCreate()"
+      (exportCSV)="onExportCSV()"
+      (delete)="onDelete()"
+      [selectedElements]="selected<%= classify(pluralName) %>"
+    ></bia-table-header>
+    <bia-table-controller
+      [defaultPageSize]="defaultPageSize"
+      [length]="totalCount$ | async"
+      [columns]="columns"
+      [columnToDisplays]="displayedColumns"
+      (displayedColumnsChange)="displayedColumnsChanged($event)"
+      (filter)="searchGlobalChanged($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+      (toggleSearch)="onToggleSearch()"
+      (viewChange)="onViewChange($event)"
+      [tableStateKey]="tableStateKey"
+    ></bia-table-controller>
+  <% if (!useCalcMode) { %>
+    <bia-table *ngIf="!useCalcMode"
+      [elements]="<%= dasherize(pluralName) %>$ | async"
+      [totalRecord]="totalCount$ | async"
+      [columnToDisplays]="displayedColumns"
+      [pageSize]="pageSize"
+      [configuration]="tableConfiguration"
+      [showColSearch]="showColSearch"
+      [globalSearchValue]="globalSearchValue"
+      [canEdit]="canEdit"
+      [canSelectElement]="canDelete"
+      [loading]="loading$ | async"
+      (edit)="onEdit($event)"
+      (loadLazy)="onLoadLazy($event)"
+      [viewPreference]="viewPreference"
+      [tableStateKey]="tableStateKey"
+      (selectedElementsChanged)="onSelectedElementsChanged($event)"
+      ></bia-table>
+  <% } else { %>
+    <app-<%= dasherize(name) %>-table *ngIf="useCalcMode"
+      [elements]="<%= dasherize(pluralName) %>$ | async"
+      [dictOptionDtos]="<%= dasherize(name) %>OptionsService.dictOptionDtos$ | async"
+      [totalRecord]="totalCount$ | async"
+      [columnToDisplays]="displayedColumns"
+      [pageSize]="pageSize"
+      [configuration]="tableConfiguration"
+      [showColSearch]="showColSearch"
+      [globalSearchValue]="globalSearchValue"
+      [canEdit]="canEdit"
+      [canAdd]="canAdd"
+      [canSelectElement]="canDelete"
+      [loading]="loading$ | async"
+      (loadLazy)="onLoadLazy($event)"
+      [viewPreference]="viewPreference"
+      [tableStateKey]="tableStateKey"
+      (selectedElementsChanged)="onSelectedElementsChanged($event)"
+      (save)="onSave($event)"
+    ></app-<%= dasherize(name) %>-table>
+  <% } %>
+  </div>
+</div>

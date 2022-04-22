@@ -29,10 +29,10 @@ export function insertImport(source: ts.SourceFile, fileToEdit: string, symbolNa
   const relevantImports = allImports.filter(node => {
     // StringLiteral of the ImportDeclaration is the import file (fileName in this case).
     const importFiles = node.getChildren()
-      .filter(child => child.kind === ts.SyntaxKind.StringLiteral)
-      .map(n => (n as ts.StringLiteral).text);
+      .filter((child: any) => child.kind === ts.SyntaxKind.StringLiteral)
+      .map((n: any) => (n as ts.StringLiteral).text);
 
-    return importFiles.filter(file => file === fileName).length === 1;
+    return importFiles.filter((file: any) => file === fileName).length === 1;
   });
 
   if (relevantImports.length > 0) {
