@@ -44,8 +44,8 @@ export class <%= classify(name) %>FormComponent implements OnChanges {
 
   private initForm() {
     this.form = this.formBuilder.group({
-      <% for (const {name: propertyName} of properties) { %>
-      ["<%= propertyName %>"]: [this.<%= dasherize(name) %>.<%= propertyName %>],
+      <% for (const {name: propertyName, type} of properties) { %>
+          ["<%= propertyName %>"]: [this.<%= dasherize(name) %>.<%= propertyName %>],
       <% } %>
     });
 

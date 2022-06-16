@@ -14,8 +14,13 @@ interface Property {
     | undefined
 }
 
-async function getProperties(pathToSwagger: string, entityName: string): Promise<Property[]> {
-  let document: OpenAPI.Document = await SwaggerParser.dereference(pathToSwagger)
+async function getProperties(
+  pathToSwagger: string,
+  entityName: string,
+): Promise<Property[]> {
+  let document: OpenAPI.Document = await SwaggerParser.dereference(
+    pathToSwagger,
+  )
 
   // TODO: add the validation of the version
 
@@ -27,8 +32,13 @@ async function getProperties(pathToSwagger: string, entityName: string): Promise
   return getResponseProperties(response)
 }
 
-async function getSchema(pathToSwagger : string, entityName: string): Promise<OpenAPIV3_1.SchemaObject> {
-  let document: OpenAPI.Document = await SwaggerParser.dereference(pathToSwagger)
+async function getSchema(
+  pathToSwagger: string,
+  entityName: string,
+): Promise<OpenAPIV3_1.SchemaObject> {
+  let document: OpenAPI.Document = await SwaggerParser.dereference(
+    pathToSwagger,
+  )
 
   // TODO: add the validation of the version
 
@@ -49,11 +59,13 @@ function getPathForEntity(
   const getPath = Object.entries(document.paths)
     .filter(
       ([key, value]: [string, OpenAPIV3_1.PathItemObject]) =>
-        key.toLowerCase().includes(entityName.toLocaleLowerCase()) 
-        && value.post
-        && key.endsWith("all"),
+        key.toLowerCase().includes(entityName.toLocaleLowerCase()) &&
+        value.post &&
+        key.endsWith('all'),
     )
     .map(([_, value]: [string, OpenAPIV3_1.PathItemObject]) => value.post)[0]
+
+  console.log('GET LOG PATH => ', getPath)
 
   return getPath
 }
@@ -90,7 +102,8 @@ function flattenSchema(
     const [key, value]: [string, OpenAPIV3_1.SchemaObject] = properties[i]
     if (value.type !== 'object') {
       const propertyName = parent !== '' ? `${parent}.${key}` : key
-      props.push({name: propertyName, type: value.type})
+      if (propertyName === 'id')
+        props.push({name: propertyName, type: value.type})
     } else {
       props = [...props, ...flattenSchema(value, key)]
     }
